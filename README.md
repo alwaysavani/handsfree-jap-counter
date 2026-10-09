@@ -1,6 +1,6 @@
 # Jap Counter — hands-free mantra counting
 
-**Try it: https://jap-counter.handsfree-jap.workers.dev**
+**Try it: https://jap.handsfree-jap.workers.dev**
 
 A web app that counts your mantra repetitions (*japa*) by listening, so your hands
 stay free for the diya, flowers or mala during pooja and meditation.
