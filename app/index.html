@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sattvic">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FBF7F0" />
+  <meta name="description" content="Jap Counter — hands-free mantra counting. Your voice is processed on your phone and never leaves it." />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Jap Counter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ================= Header ================= -->
+    <header class="top">
+      <button class="mantra-pill" id="btn-mantra" aria-haspopup="dialog" aria-label="Change mantra">
+        <span class="mantra-name" id="mantra-name">Om Namah Shivaya</span>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="top-right">
+        <span class="streak" id="streak" title="Days in a row you've chanted" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 3.5 5 5.5 5 10.5A5 5 0 0 1 7 13c0-2 1-3.5 2-4.5.2 1.6 1 2.6 2 3C11 8.5 11.5 5 12 2z"/></svg>
+          <b id="streak-num">0</b>
+        </span>
+        <button class="icon-btn" id="btn-settings" aria-label="Settings" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ================= Counter ================= -->
+    <main class="stage">
+      <p class="mantra-dev" id="mantra-dev" lang="sa">ॐ नमः शिवाय</p>
+
+      <div class="mala" id="mala">
+        <div class="mala-glow" aria-hidden="true"></div>
+        <svg class="mala-svg" viewBox="0 0 400 400" aria-hidden="true">
+          <circle class="rep-track" cx="200" cy="200" r="156"/>
+          <circle class="rep-arc" id="rep-arc" cx="200" cy="200" r="156" pathLength="100"/>
+          <g id="beads"></g>
+          <circle class="guru-bead" cx="200" cy="14" r="11"/>
+        </svg>
+        <div class="mala-center">
+          <span class="count" id="count" aria-live="off">0</span>
+          <span class="count-sub" id="count-sub">of 108</span>
+        </div>
+      </div>
+
+      <div class="status" id="status" data-state="idle" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="status-text">Ready</span>
+      </div>
+      <p class="details" id="details" hidden></p>
+    </main>
+
+    <!-- ================= Controls ================= -->
+    <footer class="dock">
+      <div class="dock-row">
+        <button class="round minor" id="btn-minus" aria-label="Subtract one">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+        </button>
+        <button class="round main" id="btn-main" aria-label="Start chanting">
+          <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+        </button>
+        <button class="round minor" id="btn-plus" aria-label="Add one">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="dock-labels" aria-hidden="true">
+        <span>−1</span><span id="main-label">Start</span><span>+1</span>
+      </div>
+      <button class="text-btn" id="btn-reset">Reset count</button>
+    </footer>
+  </div>
+
+  <!-- ================= Teach (calibration) ================= -->
+  <div class="sheet" id="sheet-teach" role="dialog" aria-modal="true" aria-labelledby="teach-title" hidden>
+    <div class="sheet-panel">
+      <!-- step: intro -->
+      <section class="step" data-step="intro">
+        <div class="step-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </div>
+        <h2 id="teach-title">Teach your mantra</h2>
+        <p class="lead">You'll chant <b class="teach-mantra">Om Namah Shivaya</b> <b>3 times, one at a time</b>. Chant it once, then pause — the app records each repetition separately and tells you when to chant the next.</p>
+        <ul class="tips">
+          <li>Chant at your normal pace and volume, where you usually chant.</li>
+          <li>A pause of about a second marks the end of each repetition.</li>
+          <li>Only full repetitions will count. Partial chants and other talk won't.</li>
+        </ul>
+        <p class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your voice is processed on this device and never recorded or sent anywhere.</p>
+        <div class="sheet-actions">
+          <button class="btn primary" id="btn-teach-go">Start listening</button>
+          <button class="btn ghost" data-close>Not now</button>
+        </div>
+      </section>
+
+      <!-- step: listening -->
+      <section class="step" data-step="listen">
+        <div class="rec-bar">
+          <span class="rec-pill" id="rec-pill" data-state="ready"><i aria-hidden="true"></i><span id="rec-label">Get ready</span></span>
+          <span class="rec-time" id="rec-time">0:00</span>
+        </div>
+        <h2 id="teach-step-title">Get ready…</h2>
+        <p class="lead" id="teach-step-sub">Stay quiet for a moment while I listen to the room.</p>
+        <canvas class="wave" id="teach-wave" width="600" height="120" aria-hidden="true"></canvas>
+        <ol class="rep-steps" id="rep-steps" aria-live="polite">
+          <li><span class="rs-dot">1</span><span class="rs-label">1st</span></li>
+          <li><span class="rs-dot">2</span><span class="rs-label">2nd</span></li>
+          <li><span class="rs-dot">3</span><span class="rs-label">3rd</span></li>
+        </ol>
+        <p class="teach-hint" id="teach-hint">Chant once, then pause — I'll move to the next one automatically.</p>
+        <div class="sheet-actions">
+          <button class="btn soft" id="btn-teach-done" disabled>Stop &amp; use 2 repetitions</button>
+          <button class="btn ghost" id="btn-teach-cancel">Cancel</button>
+        </div>
+      </section>
+
+      <!-- step: result -->
+      <section class="step" data-step="result">
+        <div class="step-icon ok" id="teach-result-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <h2 id="teach-result-title">Mantra learned</h2>
+        <p class="lead" id="teach-result-body"></p>
+        <button class="btn soft" id="btn-teach-play" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          <span>Hear what I learned</span>
+        </button>
+        <p class="tiny" id="teach-play-hint" hidden>It should be one complete repetition. If it's cut short, teach again.</p>
+        <div class="sheet-actions">
+          <button class="btn primary" id="btn-teach-start">Start chanting</button>
+          <button class="btn ghost" id="btn-teach-again">Teach again</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= Mantra picker ================= -->
+  <div class="sheet" id="sheet-mantra" role="dialog" aria-modal="true" aria-labelledby="mantra-title" hidden>
+    <div class="sheet-panel">
+      <div class="sheet-head">
+        <h2 id="mantra-title">Mantra</h2>
+        <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="mantra-list" id="mantra-list"></ul>
+      <form class="add-mantra" id="form-add-mantra" autocomplete="off">
+        <input id="custom-mantra" type="text" placeholder="Add your own mantra" maxlength="80" aria-label="Your own mantra" />
+        <button class="btn soft" type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= Settings ================= -->
+  <div class="sheet" id="sheet-settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+    <div class="sheet-panel">
+      <div class="sheet-head">
+        <h2 id="settings-title">Settings</h2>
+        <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+
+      <div class="group">
+        <h3>Mala size</h3>
+        <div class="seg" id="seg-target" role="radiogroup" aria-label="Mala size">
+          <button role="radio" data-v="21">21</button>
+          <button role="radio" data-v="54">54</button>
+          <button role="radio" data-v="108">108</button>
+          <button role="radio" data-v="1008">1008</button>
+          <button role="radio" data-v="0" aria-label="No limit">∞</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Voice detection</h3>
+        <div class="seg" id="seg-sens" role="radiogroup" aria-label="Detection sensitivity">
+          <button role="radio" data-v="0.92">Strict</button>
+          <button role="radio" data-v="1">Balanced</button>
+          <button role="radio" data-v="1.15">Lenient</button>
+        </div>
+        <p class="tiny">Missing some chants? Try Lenient. Partial chants counting? Try Strict.</p>
+        <div class="row">
+          <div><b id="voice-state">Voice learned</b><span class="tiny block" id="voice-sub"></span></div>
+          <button class="btn soft small" id="btn-reteach">Teach again</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Theme</h3>
+        <div class="swatches" id="swatches" role="radiogroup" aria-label="Theme"></div>
+      </div>
+
+      <div class="group">
+        <h3>Feedback</h3>
+        <label class="toggle"><span>Bead click on each count</span><input type="checkbox" id="opt-tick" /><i></i></label>
+        <label class="toggle"><span>Bell when the mala completes</span><input type="checkbox" id="opt-sound" /><i></i></label>
+        <label class="toggle"><span>Vibrate</span><input type="checkbox" id="opt-vibrate" /><i></i></label>
+        <label class="toggle"><span>Show detection details</span><input type="checkbox" id="opt-details" /><i></i></label>
+        <button class="btn soft small" id="btn-debug" hidden>Save recordings for troubleshooting</button>
+      </div>
+
+      <p class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Everything runs on this device. No audio is recorded or uploaded.</p>
+    </div>
+  </div>
+
+  <!-- ================= Mala complete ================= -->
+  <div class="sheet" id="sheet-done" role="dialog" aria-modal="true" aria-labelledby="done-title" hidden>
+    <div class="sheet-panel center">
+      <h2 id="done-title">Mala complete</h2>
+      <p class="lead" id="done-body"></p>
+      <div class="card-preview" id="card-preview"></div>
+      <div class="share-row">
+        <button class="btn soft" id="btn-share">Share</button>
+        <button class="btn soft" id="btn-wa">WhatsApp</button>
+        <button class="btn soft" id="btn-save">Save</button>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn primary" id="btn-again">Begin another mala</button>
+        <button class="btn ghost" data-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Confirm ================= -->
+  <div class="sheet" id="sheet-confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" hidden>
+    <div class="sheet-panel center">
+      <h2 id="confirm-title">Reset count?</h2>
+      <p class="lead" id="confirm-body">Your count goes back to 0. Today's total for your streak is kept.</p>
+      <div class="sheet-actions">
+        <button class="btn danger" id="btn-confirm-yes">Reset</button>
+        <button class="btn ghost" data-close>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Mic problem ================= -->
+  <div class="sheet" id="sheet-error" role="alertdialog" aria-modal="true" aria-labelledby="err-title" hidden>
+    <div class="sheet-panel">
+      <h2 id="err-title">Microphone needed</h2>
+      <div class="err-body" id="err-body"></div>
+      <details class="diag" id="err-diag-wrap" hidden>
+        <summary>Technical details</summary>
+        <pre id="err-diag"></pre>
+      </details>
+      <div class="sheet-actions">
+        <button class="btn primary" id="btn-err-retry">Try again</button>
+        <button class="btn ghost" data-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/miccheck.js"></script>
+  <script src="js/chime.js"></script>
+  <script src="js/dsp.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

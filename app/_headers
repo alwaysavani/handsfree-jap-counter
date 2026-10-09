@@ -1,0 +1,23 @@
+# Server-side security & cache headers (Netlify / Cloudflare Pages style).
+# Pairs with the <meta> CSP in index.html. Google Fonts must be allowed here
+# too, or the typography silently falls back to system fonts in production.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: microphone=(self), camera=(), geolocation=(), payment=(), usb=()
+
+# File names are not content-hashed, so code must revalidate on every load
+# (the old 1-year "immutable" rule kept phones on stale, buggy code).
+/index.html
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+/css/*
+  Cache-Control: no-cache
+/js/*
+  Cache-Control: no-cache
+/icons/*
+  Cache-Control: public, max-age=604800
+/manifest.json
+  Cache-Control: public, max-age=3600

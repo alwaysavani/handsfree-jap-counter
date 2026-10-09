@@ -1,0 +1,19 @@
+{
+  "name": "handsfree-jap",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Hands-free japa counter — on-device mantra recognition (MFCC + streaming DTW)",
+  "scripts": {
+    "test": "node --test tests/unit.test.mjs tests/corpus.test.mjs tests/real-voice.test.mjs",
+    "test:unit": "node --test tests/unit.test.mjs",
+    "test:corpus": "node --test tests/corpus.test.mjs",
+    "test:ui": "node tests/e2e.mjs ui",
+    "test:audio": "node tests/e2e.mjs audio",
+    "test:e2e": "node tests/e2e.mjs all",
+    "test:all": "npm test && node tests/e2e.mjs all"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}

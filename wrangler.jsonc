@@ -1,0 +1,9 @@
+// Cloudflare Workers static-assets deployment: serves the app/ folder as is.
+// Deploy with `npx wrangler deploy`. app/_headers sets security & caching headers.
+{
+  "name": "jap-counter",
+  "compatibility_date": "2026-10-06",
+  "assets": {
+    "directory": "./app"
+  }
+}

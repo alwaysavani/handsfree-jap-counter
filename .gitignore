@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# synthesized test audio (regenerated automatically by the tests)
+tests/.cache/
+
+# personal voice recordings used for local real-voice tests — never commit
+samples/
+*.wav
+
+# Cloudflare / deploy tooling
+.wrangler/
+.dev.vars
+
+# local environment & logs
+.env
+.env.*
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
